@@ -3,7 +3,6 @@ WORKDIR /build
 ADD .git ./.git
 RUN git describe --abbrev=0 --tags | tee ./version
 
-
 FROM node:lts-alpine AS builder-web
 ADD gui /build/gui
 WORKDIR /build/gui
@@ -19,9 +18,9 @@ COPY --from=version /build/version ./
 COPY --from=builder-web /build/web server/router/web
 RUN export VERSION=$(cat ./version) && CGO_ENABLED=0 go build -ldflags="-X github.com/v2rayA/v2rayA/conf.Version=${VERSION:1} -s -w" -o v2raya .
 
-FROM v2fly/v2fly-core
+FROM teddysun/xray
 COPY --from=builder /build/service/v2raya /usr/bin/
-RUN wget -O /usr/local/share/v2ray/LoyalsoldierSite.dat https://raw.githubusercontent.com/mzz2017/dist-v2ray-rules-dat/master/geosite.dat
+RUN wget -O /usr/share/xray/LoyalsoldierSite.dat https://raw.githubusercontent.com/mzz2017/dist-v2ray-rules-dat/master/geosite.dat
 RUN apk add --no-cache iptables ip6tables
 EXPOSE 2017
 VOLUME /etc/v2raya

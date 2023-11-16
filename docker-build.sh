@@ -1,0 +1,1 @@
+docker build --build-arg https_proxy=http://192.168.1.1:20171 --build-arg HTTPS_PROXY=http://192.168.1.1:20171 -t swr.lan.aiminjie.com/amj/v2raya:latest . 
